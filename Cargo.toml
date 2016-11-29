@@ -1,0 +1,12 @@
+[package]
+name = "bookmarkt-cli"
+version = "0.1.0"
+authors = ["team-chiru <team-chiru@protonmail.com>"]
+
+[dependencies.clap]
+version = "*"
+features = [ "yaml", "suggestions", "color" ]
+
+[dependencies.bookmarkt]
+version = "*"
+git = "https://github.com/team-chiru/bookmarkt.git"
