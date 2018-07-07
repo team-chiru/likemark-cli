@@ -2,18 +2,21 @@ name: "\n _____         _                 _   _\n| __  |___ ___| |_ _____ ___ __
 version: '0.1'
 author: Team Chiru <team-chiru@protonmail.com>
 about: Bookmark manager
+args:
 subcommands:
+    - list:
+        about: List all of your current likemark 
     - import:
-        about: Import bookmarks from browser format file to the bookmarkt database
+        about: Import bookmarks from browser format file to the likemark database
         args:
             - SRC:
                 help: Bookmarks source file path
                 required: true
                 index: 1
     - export:
-        about: Export bookmarks from the bookmarkt database to browser format file
+        about: Export bookmarks from the likemark database to browser format file
         args:
             - DEST:
-                help: from bookmarks file to browser
+                help: from likemark database to netscape file.
                 required: true
                 index: 1
