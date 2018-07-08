@@ -1,49 +1,31 @@
 #[macro_use] extern crate serde_derive;
 #[macro_use] extern crate clap;
-extern crate hyper;
-mod model;
+extern crate curl;
 
+// Import of likemark model
+mod model;
 use model::likemark::Likemark;
+
 use clap::App;
-use std::io::{self, Write};
-use hyper::Client;
-use hyper::rt::{self, Future, Stream};
+use std::io::{stdout, Write};
+use curl::easy::Easy;
 
 fn main() {
     let yaml = load_yaml!("../res/cli.yaml");
     let matches = App::from_yaml(yaml).get_matches();
-    let client = Client::new();
+    let mut client = Easy::new();
 
     if matches.is_present("list") {
-        let uri: hyper::Uri = "http://localhost:42506/likemark/list".parse().unwrap();
+        let url = "http://localhost:42506/likemark/list";
+        client.url(url).unwrap();
+        client.write_function(|data| {
+            stdout().write_all(data).unwrap();
+            Ok(data.len())
+        }).unwrap();
+        client.perform().unwrap();
 
-        let request = client
-        // Fetch the url...
-        .get(uri)
-        // And then, if we get a response back...
-        .and_then(|res| {
-            println!("Response: {}", res.status());
-            println!("Headers: {:#?}", res.headers());
-
-            // The body is a stream, and for_each returns a new Future
-            // when the stream is finished, and calls the closure on
-            // each chunk of the body...
-            println!("{}", "Here is the likemark list.");
-            res.into_body().for_each(|chunk| {
-                io::stdout().write_all(&chunk)
-                    .map_err(|e| panic!("example expects stdout is open, error={}", e))
-            })
-        })
-        // If all good, just tell the user...
-        .map(|_| {
-            println!("\n\nDone.");
-        })
-        // If there was an error, let the user know...
-        .map_err(|err| {
-            eprintln!("Error {}", err);
-        });
-
-        rt::run(request);
+        println!("{}", "");
+        println!("Here is the status code: {}", client.response_code().unwrap());
     } 
 
     if let Some(submatches) = matches.subcommand_matches("import") {
