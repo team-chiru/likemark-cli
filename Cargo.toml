@@ -7,4 +7,5 @@ authors = ["team-chiru <team-chiru@protonmail.com>"]
 clap = {version = "2.32", features = [ "yaml", "suggestions", "color" ]}
 curl = "0.4.12"
 serde = "1.0.70"
+serde_json = "1.0.22"
 serde_derive = "1.0.70"
